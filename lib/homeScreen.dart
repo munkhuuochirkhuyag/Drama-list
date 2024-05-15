@@ -1,165 +1,80 @@
+import 'package:daalt/detail.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: const Color.fromARGB(255, 251, 209, 255),
-      child: Column(
-        // mainAxisAlignment: MainAxisAlignment.start,
-        // crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 40, left: 40, right: 220),
-            child: Container(
-              height: 80,
-              width: 120,
-              decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: ExactAssetImage("assets/images/home7.png"))),
-            ),
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Container(
+          color: const Color.fromARGB(255, 251, 209, 255),
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 40, left: 40, right: 220),
+                child: Image.asset("assets/images/home7.png"),
+              ),
+              SizedBox(height: 20),
+              Container(
+                height: 300,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  image: const DecorationImage(
+                      image: ExactAssetImage("assets/images/home1.png"),
+                      fit: BoxFit.cover),
+                  borderRadius: BorderRadius.circular(48),
+                ),
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  buildImage("assets/images/home6.png"),
+                  buildImage("assets/images/home5.png"),
+                  buildImage("assets/images/home6.png"),
+                ],
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  buildImage("assets/images/home4.png"),
+                  buildImage("assets/images/home2.png"),
+                  buildImage("assets/images/home3.png"),
+                ],
+              ),
+            ],
           ),
-          Flexible(
-            flex: 2,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  // crossAxisAlignment: CrossAxisAlignment.center,
-                  // mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 0),
-                      child: Container(
-                        height: 300,
-                        width: 300,
-                        decoration: BoxDecoration(
-                          image: const DecorationImage(
-                              image: ExactAssetImage("assets/images/home1.png"),
-                              fit: BoxFit.cover),
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                    ),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(bottom: 20),
-                    //   child: SizedBox(
-                    //     child: Container(
-                    //       height: 100,
-                    //       width: 300,
-                    //       decoration: BoxDecoration(
-                    //           borderRadius: BorderRadius.circular(10),
-                    //           color: Colors.blue),
-                    //     ),
-                    //   ),
-                    // )
-                  ],
-                )
-              ],
-            ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildImage(String assetPath) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Detail()));
+      },
+      child: Container(
+        height: 150,
+        width: 100,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(assetPath),
+            fit: BoxFit.cover,
           ),
-          Flexible(
-            flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Container(
-                    height: 150,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      image: const DecorationImage(
-                          image: ExactAssetImage("assets/images/home6.png"),
-                          fit: BoxFit.cover),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Container(
-                    height: 150,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      image: const DecorationImage(
-                          image: ExactAssetImage("assets/images/home5.png"),
-                          fit: BoxFit.cover),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Container(
-                    height: 150,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      image: const DecorationImage(
-                          image: ExactAssetImage("assets/images/home6.png"),
-                          fit: BoxFit.cover),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Flexible(
-            flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Container(
-                    height: 150,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      image: const DecorationImage(
-                          image: ExactAssetImage("assets/images/home4.png"),
-                          fit: BoxFit.cover),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Container(
-                    height: 150,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      image: const DecorationImage(
-                          image: ExactAssetImage("assets/images/home2.png"),
-                          fit: BoxFit.cover),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Container(
-                    height: 150,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      image: const DecorationImage(
-                          image: ExactAssetImage("assets/images/home3.png"),
-                          fit: BoxFit.cover),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          borderRadius: BorderRadius.circular(15),
+        ),
       ),
     );
   }
