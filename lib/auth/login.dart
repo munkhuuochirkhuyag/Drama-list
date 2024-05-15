@@ -13,8 +13,6 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final _auth = AuthService();
-  late final String? name;
-  late final String? email;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -39,7 +37,7 @@ class _LoginState extends State<Login> {
               left: 80,
               right: 80,
               child: TextFormField(
-                // controller: _emailController,
+                controller: _emailController,
                 decoration: const InputDecoration(labelText: 'Э-мэйл'),
                 validator: (text) {
                   if (text!.isEmpty) {

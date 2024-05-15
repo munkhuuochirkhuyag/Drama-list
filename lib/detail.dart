@@ -1,7 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:daalt/model/cast.dart';
+import 'package:daalt/model/movie.dart';
+import 'package:daalt/profile.dart';
 import 'package:flutter/material.dart';
 
 class Detail extends StatefulWidget {
-  const Detail({Key? key}) : super(key: key);
+  final Movie movie;
+  const Detail({required this.movie, Key? key}) : super(key: key);
 
   @override
   State<Detail> createState() => _DetailState();
@@ -14,12 +19,30 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    _castData = fetchCastData();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  late Future<List<Cast>> _castData;
+
+  Future<List<Cast>> fetchCastData() async {
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('cast').get();
+    List<Cast> casts = [];
+    querySnapshot.docs.forEach((doc) {
+      casts.add(Cast(
+        name: doc['name'],
+        image: doc['image'],
+        movie: doc['movie'],
+        movieImage: doc['movieImage'],
+      ));
+    });
+    return casts;
   }
 
   @override
@@ -31,14 +54,14 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.asset(
-            "assets/images/home1.png",
+          Image.network(
+            widget.movie.image!,
             fit: BoxFit.fitWidth,
             width: double.infinity,
             height: 300,
           ),
           Text(
-            'Our beloved Summer',
+            widget.movie.name!,
             style: TextStyle(fontSize: 25),
           ),
           Row(
@@ -111,26 +134,79 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
                 controller: _tabController,
                 children: [
                   Container(
-                    color: Colors.red,
-                    child: Center(child: Text('Tab 1')),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        FutureBuilder<List<Cast>>(
+                          future: _castData,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else {
+                              List<Cast> filteredCasts = snapshot.data!
+                                  .where(
+                                      (cast) => cast.movie == widget.movie.name)
+                                  .toList();
+
+                              return filteredCasts.isEmpty
+                                  ? SizedBox(
+                                      child: Text('Хоосон байна.'),
+                                    )
+                                  : SizedBox(
+                                      height: 100,
+                                      width: 100,
+                                      child: GridView.count(
+                                        crossAxisSpacing: 17,
+                                        mainAxisSpacing: 30,
+                                        crossAxisCount: filteredCasts.length,
+                                        children: filteredCasts.map((cast) {
+                                          return buildCast(cast);
+                                        }).toList(),
+                                      ),
+                                    );
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                   Container(
-                    color: Colors.green,
-                    child: Center(child: Text('Tab 2')),
+                    child: Center(child: Text('Хоосон байна.')),
                   ),
                   Container(
-                    color: Colors.blue,
-                    child: Center(child: Text('Tab 3')),
+                    child: Center(child: Text('Хоосон байна.')),
                   ),
                   Container(
-                    color: Colors.yellow,
-                    child: Center(child: Text('Tab 3')),
+                    child: Center(child: Text('Хоосон байна.')),
                   ),
                 ],
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget buildCast(Cast cast) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Profile(cast: cast)),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(cast.image!),
+            fit: BoxFit.cover,
+          ),
+          borderRadius: BorderRadius.circular(15),
+        ),
       ),
     );
   }

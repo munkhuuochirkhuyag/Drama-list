@@ -1,5 +1,7 @@
-import 'package:daalt/detail.dart';
+import 'package:daalt/model/movie.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:daalt/detail.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -9,6 +11,27 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late Future<List<Movie>> _movieData;
+
+  @override
+  void initState() {
+    super.initState();
+    _movieData = fetchMovieData();
+  }
+
+  Future<List<Movie>> fetchMovieData() async {
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('movie').get();
+    List<Movie> movies = [];
+    querySnapshot.docs.forEach((doc) {
+      movies.add(Movie(
+        name: doc['name'],
+        image: doc['image'],
+      ));
+    });
+    return movies;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,28 +52,35 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   image: const DecorationImage(
-                      image: ExactAssetImage("assets/images/home1.png"),
-                      fit: BoxFit.cover),
+                    image: ExactAssetImage("assets/images/home1.png"),
+                    fit: BoxFit.cover,
+                  ),
                   borderRadius: BorderRadius.circular(48),
                 ),
               ),
               SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  buildImage("assets/images/home6.png"),
-                  buildImage("assets/images/home5.png"),
-                  buildImage("assets/images/home6.png"),
-                ],
-              ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  buildImage("assets/images/home4.png"),
-                  buildImage("assets/images/home2.png"),
-                  buildImage("assets/images/home3.png"),
-                ],
+              FutureBuilder<List<Movie>>(
+                future: _movieData,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    return SizedBox(
+                      height: 600,
+                      width: double.infinity,
+                      child: GridView.count(
+                        crossAxisSpacing: 17,
+                        mainAxisSpacing: 30,
+                        crossAxisCount: 3,
+                        children: snapshot.data!.map((movie) {
+                          return buildMovie(movie);
+                        }).toList(),
+                      ),
+                    );
+                  }
+                },
               ),
             ],
           ),
@@ -59,18 +89,18 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget buildImage(String assetPath) {
+  Widget buildMovie(Movie movie) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Detail()));
+          context,
+          MaterialPageRoute(builder: (context) => Detail(movie: movie)),
+        );
       },
       child: Container(
-        height: 150,
-        width: 100,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(assetPath),
+            image: NetworkImage(movie.image!),
             fit: BoxFit.cover,
           ),
           borderRadius: BorderRadius.circular(15),

@@ -23,6 +23,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -33,43 +34,43 @@ class _MyAppState extends State<MyApp> {
         children: [
           Image.asset("assets/images/login.png", fit: BoxFit.cover),
           Positioned(
-              bottom: 150,
-              left: 80,
-              right: 80,
-              child: Builder(
-                builder: (context) => ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) => SigIn()));
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 248, 248, 248),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 50, vertical: 20),
-                    textStyle:
-                        const TextStyle(fontSize: 20, color: Colors.amber),
-                  ),
-                  child: const Text('Бүртгүүлэх'),
+            bottom: 150,
+            left: 80,
+            right: 80,
+            child: Builder(
+              builder: (context) => ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) => SigIn()));
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 248, 248, 248),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                  textStyle: const TextStyle(fontSize: 20, color: Colors.amber),
                 ),
-              )),
+                child: const Text('Бүртгүүлэх'),
+              ),
+            ),
+          ),
           Positioned(
             bottom: 80,
             left: 80,
             right: 80,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => Login()));
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 248, 248, 248),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                textStyle: const TextStyle(
-                  fontSize: 20,
+            child: Builder(
+              builder: (context) => ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) => Login()));
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 248, 248, 248),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                  textStyle: const TextStyle(fontSize: 20, color: Colors.amber),
                 ),
+                child: const Text('Нэвтрэх'),
               ),
-              child: const Text('Нэвтрэх'),
             ),
           ),
         ],
